@@ -16,7 +16,7 @@ function ResponsePanel({ data, isLoading, error }) {
                     <div className="col-2"></div>
                     <div className="col-8">
                         <div className="card">
-                            <h5 className="card-header">Featured</h5>
+                            <h5 className="card-header">Meanings</h5>
                             <div className="card-body">
                                 <List data={data} />
                             </div>
