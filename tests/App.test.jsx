@@ -1,5 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { reducer, ACTIONS } from "../src/App";
+import { describe, it, expect, vi } from "vitest";
+import { reducer, ACTIONS, App } from "../src/App";
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import axios from "axios";
 describe("Reducer function tests", () => {
     it(`Test ${ACTIONS.START_FETCHING_DATA}`, () => {
         const state = { isLoading: false, error: false, data: null };
@@ -28,5 +30,50 @@ describe("Reducer function tests", () => {
         const expectedState = { isLoading: false, error: false, data: null };
         const newState = reducer(state, action);
         expect(newState).toStrictEqual(expectedState);
+    });
+});
+// Integration tests
+const data = [
+    {
+        partOfSpeech: 'noun',
+        definition: { definition: 'An attempt to find something.' }
+    },
+    {
+        partOfSpeech: 'verb',
+        definition: { definition: 'To look in (a place) for something.' }
+    }
+];
+const response = {
+    data: [{ word: 'Search', phonetics: [], meanings: data }],
+    status: 200,
+    statusText: ''
+}
+vi.mock('axios');
+describe('App component integration tests', () => {
+    it('Happy path', async () => {
+        const promise = Promise.resolve(response);
+        //console.log(promise);
+        axios.get.mockImplementationOnce(() => promise);
+        render(< App />);
+        expect(screen.queryByText(/Is/)).toBeInTheDocument();
+        await waitFor(async () => await promise);
+        expect(screen.queryByText(/Is/)).toBeNull();
+        expect(screen.queryByText(/Meanings/)).toBeInTheDocument();
+        //screen.debug();
+    });
+    it('Unhappy path', async () => {
+        const promise = Promise.reject();
+        //console.log(promise);
+        axios.get.mockImplementationOnce(() => promise);
+        render(< App />);
+        expect(screen.queryByText(/Is/)).toBeInTheDocument();
+        try {
+            await waitFor(async () => await promise);
+        }
+        catch (exception) {
+            expect(screen.queryByText(/Is/)).toBeNull();
+            expect(screen.queryByText(/No/)).toBeInTheDocument();
+        }
+        //screen.debug();
     });
 });

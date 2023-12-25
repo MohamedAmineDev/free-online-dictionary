@@ -7,7 +7,7 @@ function ResponsePanel({ data, isLoading, error }) {
                 <div className="col-2"></div>
                 <div className="col-8 text-center">
                     {isLoading ? (<p className="fs-3">Is Loading...</p>) : (<></>)}
-                    {error ? (<p className="fs-3 text-danger">No data were found ! </p>) : (<></>)}
+                    {error ? (<p className="fs-3 text-danger">No data were found !</p>) : (<></>)}
                 </div>
                 <div className="col-2"></div>
             </div>

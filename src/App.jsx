@@ -29,9 +29,10 @@ function reducer(state, action) {
   }
 }
 function App() {
-  const [word, setWord] = React.useState(localStorage.getItem(storageName) || "Hello");
+  
   const [url, setUrl] = React.useState('');
   const [state, dispatch] = React.useReducer(reducer, { isLoading: false, error: false, data: null });
+  const [word, setWord] = React.useState(localStorage.getItem(storageName) || "Hello");
   function handleWord(e) {
     setWord(e.target.value);
     e.preventDefault();
@@ -42,34 +43,44 @@ function App() {
       localStorage.setItem(storageName, word);
     }
   }, [word]);
-  async function doSearch(e) {
-    e.preventDefault();
+  React.useEffect(()=>{
+    fetchData();
+  },[url]);
+  function formatData(response){
+    return response.data[0].meanings
+    .filter(d => d.partOfSpeech == 'noun' || d.partOfSpeech == 'verb' || d.partOfSpeech == 'adjective' || d.partOfSpeech == 'interjection')
+    .map(d => {
+      if (d.definition) {
+        return {
+          partOfSpeech: d.partOfSpeech,
+          definition: d.definition
+        };
+      }
+      else {
+        return {
+          partOfSpeech: d.partOfSpeech,
+          definition: d.definitions[0]
+        };
+      }
+    });
+  }
+  async function fetchData() {
     dispatch({ type: ACTIONS.START_FETCHING_DATA });
 
     try {
       const response = await axios.get(`${url}`);
       //const meanings = response.data[0].meanings.map(d=>d.definitions);
-      const data = response.data[0].meanings
-        .filter(d => d.partOfSpeech == 'noun' || d.partOfSpeech == 'verb' || d.partOfSpeech == 'adjective' || d.partOfSpeech == 'interjection')
-        .map(d => {
-          if (d.definition) {
-            return {
-              partOfSpeech: d.partOfSpeech,
-              definition: d.definition
-            };
-          }
-          else {
-            return {
-              partOfSpeech: d.partOfSpeech,
-              definition: d.definitions[0]
-            };
-          }
-        });
-      console.log(data);
+      console.log(response);
+      const data = formatData(response);
+      //console.log(data);
       dispatch({ type: ACTIONS.DATA_FETCHED, payload: data });
     } catch (error) {
       dispatch({ type: ACTIONS.DATA_NOT_FETCHED });
     }
+  }
+  function doSearch(e) {
+    e.preventDefault();
+    fetchData();
   };
 
   return (
@@ -81,5 +92,5 @@ function App() {
     </>
   )
 }
-export { reducer,ACTIONS };
+export { reducer, ACTIONS, App };
 export default App;
