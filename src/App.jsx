@@ -33,6 +33,7 @@ function App() {
   const [url, setUrl] = React.useState('');
   const [state, dispatch] = React.useReducer(reducer, { isLoading: false, error: false, data: null });
   const [word, setWord] = React.useState(localStorage.getItem(storageName) || "Hello");
+  const [limit,setLimit]=React.useState(0);
   function handleWord(e) {
     setWord(e.target.value);
     e.preventDefault();
@@ -44,7 +45,10 @@ function App() {
     }
   }, [word]);
   React.useEffect(()=>{
-    fetchData();
+    if(url != "" && limit <1){
+      setLimit(limit+1);
+      fetchData();
+    }
   },[url]);
   function formatData(response){
     return response.data[0].meanings

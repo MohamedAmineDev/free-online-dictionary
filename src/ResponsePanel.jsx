@@ -6,13 +6,13 @@ function ResponsePanel({ data, isLoading, error }) {
             <div className="row mt-3">
                 <div className="col-2"></div>
                 <div className="col-8 text-center">
-                    {isLoading ? (<p className="fs-3">Is Loading...</p>) : (<></>)}
-                    {error ? (<p className="fs-3 text-danger">No data were found !</p>) : (<></>)}
+                    {isLoading ? (<p className="fs-3" data-testid="loading">Is Loading...</p>) : (<></>)}
+                    {error ? (<p className="fs-3 text-danger" data-testid="error">No data were found !</p>) : (<></>)}
                 </div>
                 <div className="col-2"></div>
             </div>
             {data ? (<>
-                <div className="row">
+                <div className="row" data-testid="response">
                     <div className="col-2"></div>
                     <div className="col-8">
                         <div className="card">
