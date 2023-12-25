@@ -7,6 +7,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Search from './Search';
 import axios from "axios";
+import ResponsePanel from './ResponsePanel';
 const APIURL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 const storageName = "word";
 const ACTIONS = {
@@ -17,13 +18,13 @@ const ACTIONS = {
 function reducer(state, action) {
   switch (action.type) {
     case ACTIONS.START_FETCHING_DATA: {
-      return { ...state, isLoading: true, error: false };
+      return { ...state, isLoading: true, error: false, data: null };
     }
     case ACTIONS.DATA_FETCHED: {
       return { ...state, isLoading: false, error: false, data: action.payload };
     }
     case ACTIONS.DATA_NOT_FETCHED: {
-      return { ...state, isLoading: false, error: true, data: [] };
+      return { ...state, isLoading: false, error: true, data: null };
     }
     default:
       return state;
@@ -32,9 +33,10 @@ function reducer(state, action) {
 function App() {
   const [word, setWord] = React.useState(localStorage.getItem(storageName) || "Hello");
   const [url, setUrl] = React.useState('');
-  const [state, dispatch] = React.useReducer(reducer, { isLoading: false, error: false, data: [] });
+  const [state, dispatch] = React.useReducer(reducer, { isLoading: false, error: false, data: null });
   function handleWord(e) {
     setWord(e.target.value);
+    e.preventDefault();
 
   }
   React.useEffect(() => {
@@ -43,13 +45,31 @@ function App() {
       localStorage.setItem(storageName, word);
     }
   }, [word]);
-  async function doSearch() {
+  async function doSearch(e) {
+    e.preventDefault();
     dispatch({ type: ACTIONS.START_FETCHING_DATA });
 
     try {
       const response = await axios.get(`${url}`);
-      //console.log();
-      dispatch({ type: ACTIONS.DATA_FETCHED, payload: response.data[0].meanings });
+      //const meanings = response.data[0].meanings.map(d=>d.definitions);
+      const data = response.data[0].meanings
+        .filter(d => d.partOfSpeech == 'noun' || d.partOfSpeech == 'verb' || d.partOfSpeech == 'adjective' || d.partOfSpeech == 'interjection')
+        .map(d => {
+          if( d.definition ){
+            return {
+              partOfSpeech: d.partOfSpeech,
+              definition: d.definition
+            };
+          }
+          else{
+            return {
+              partOfSpeech: d.partOfSpeech,
+              definition: d.definitions[0]
+            };
+          }
+        });
+      console.log(data);
+      dispatch({ type: ACTIONS.DATA_FETCHED, payload: data });
     } catch (error) {
       dispatch({ type: ACTIONS.DATA_NOT_FETCHED });
     }
@@ -59,6 +79,7 @@ function App() {
     <>
       <Header />
       <Search word={word} handleSearch={handleWord} doSearch={doSearch} />
+      <ResponsePanel isLoading={state.isLoading} error={state.error} data={state.data} />
       <Footer />
     </>
   )
