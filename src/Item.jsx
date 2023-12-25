@@ -9,4 +9,5 @@ function Item({ item, index }) {
         </>
     );
 }
+export {Item};
 export default Item;
