@@ -3,7 +3,7 @@ import Item from "./Item";
 function List({ data }) {
     return (
         <>
-            <table className="table  border-primary table-hover ">
+            <table className="table  border-primary table-hover " title="Response">
                 <thead className="table-primary">
                     <tr>
                         <th scope="col">#</th>
@@ -21,4 +21,5 @@ function List({ data }) {
         </>
     );
 }
+export {List};
 export default List;

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect,vi } from "vitest";
 import { Search } from "../src/Search";
-describe('Search components tests',()=>{
+describe('Search component tests',()=>{
     it('Test the parameter word',()=>{
         const word="Hi";
         const isLoading=false;
