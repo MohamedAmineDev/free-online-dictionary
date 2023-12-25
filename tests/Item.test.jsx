@@ -6,7 +6,7 @@ const item = {
     definition: { definition: 'An attempt to find something.' }
 };
 const index = 0;
-describe('Header components tests', () => {
+describe('Item component tests', () => {
     it('Test the index', () => {
         render(<Item item={item} index={index} />);
         expect(screen.getByText(index + 1)).toBeInTheDocument();

@@ -11,7 +11,7 @@ const data = [
         definition: { definition: 'To look in (a place) for something.' }
     }
 ];
-describe('Header components tests', () => {
+describe('List component tests', () => {
     it('Test the table', () => {
         render(<List data={data}  />);
         expect(screen.getByTitle('Response')).toBeInTheDocument();
@@ -28,5 +28,5 @@ describe('Header components tests', () => {
         render(<List data={data}  />);
         expect(screen.getByText('Definition')).toBeInTheDocument();
     });
-    
+
 });
