@@ -1,6 +1,6 @@
 import Item from "./Item";
 
-function List({data}) {
+function List({ data }) {
     return (
         <>
             <table className="table  border-primary table-hover ">
@@ -10,12 +10,12 @@ function List({data}) {
                         <th scope="col">Type</th>
                         <th scope="col">Definition</th>
                     </tr>
-                    {data.map((d,index)=>{
+                    {data.map((d, index) => {
                         return <Item item={d} key={index} index={index} />
                     })}
                 </thead>
                 <tbody>
-                    
+
                 </tbody>
             </table>
         </>

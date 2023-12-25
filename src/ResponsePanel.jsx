@@ -11,7 +11,7 @@ function ResponsePanel({ data, isLoading, error }) {
                 </div>
                 <div className="col-2"></div>
             </div>
-            {data  ? (<>
+            {data ? (<>
                 <div className="row">
                     <div className="col-2"></div>
                     <div className="col-8">

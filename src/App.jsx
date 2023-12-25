@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
+//import 'bootstrap/dist/js/bootstrap.min.js';
 import Header from './Header';
 import Footer from './Footer';
 import Search from './Search';
@@ -37,7 +35,6 @@ function App() {
   function handleWord(e) {
     setWord(e.target.value);
     e.preventDefault();
-
   }
   React.useEffect(() => {
     if (word != "") {
@@ -55,13 +52,13 @@ function App() {
       const data = response.data[0].meanings
         .filter(d => d.partOfSpeech == 'noun' || d.partOfSpeech == 'verb' || d.partOfSpeech == 'adjective' || d.partOfSpeech == 'interjection')
         .map(d => {
-          if( d.definition ){
+          if (d.definition) {
             return {
               partOfSpeech: d.partOfSpeech,
               definition: d.definition
             };
           }
-          else{
+          else {
             return {
               partOfSpeech: d.partOfSpeech,
               definition: d.definitions[0]
@@ -84,5 +81,5 @@ function App() {
     </>
   )
 }
-
-export default App
+export { reducer,ACTIONS };
+export default App;

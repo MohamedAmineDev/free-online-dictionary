@@ -1,4 +1,4 @@
-function Search({ word, handleSearch,doSearch }) {
+function Search({ word, handleSearch, doSearch }) {
     return (
         <>
             <div className="row mt-3">
