@@ -1,4 +1,12 @@
-function Search({ word, handleSearch, doSearch,doLastSearch }) {
+import { Word } from "./App";
+import React, { MouseEvent } from 'react';
+interface ISearch{
+    word:string;
+    handleSearch (e: React.ChangeEvent<HTMLInputElement>) : void;
+    doSearch (e: MouseEvent<HTMLButtonElement> ):void;
+    doLastSearch (e: MouseEvent<HTMLButtonElement>):void;
+}
+function Search({ word, handleSearch, doSearch,doLastSearch } : ISearch) {
     return (
         <>
             <div className="row mt-3">
