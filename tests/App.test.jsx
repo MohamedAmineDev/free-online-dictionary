@@ -24,6 +24,31 @@ describe("Reducer function tests", () => {
         const newState = reducer(state, action);
         expect(newState).toStrictEqual(expectedState);
     });
+    it(`Test ${ACTIONS.DATA_DELETE_ITEM}`, () => {
+        const data = [{ partOfSpeech: 'noun', definition: { definition: 'The word "hi" used as a greeting.' } }]
+        const state = { isLoading: false, error: false, data: data };
+        const action = { type: ACTIONS.DATA_DELETE_ITEM, index: 0 };
+        const expectedState = { isLoading: false, error: false, data: [] };
+        const newState = reducer(state, action);
+        expect(newState).toStrictEqual(expectedState);
+    });
+    it(`Test ${ACTIONS.DATA_SORT_ITEMS}`, () => {
+        const data = [
+            { partOfSpeech: 'noun', definition: { definition: '(diminutive) An even number.' } },
+            { partOfSpeech: 'verb', definition: { definition: 'To make flat and level.' } },
+            { partOfSpeech: 'adjective', definition: { definition: '	Flat and level.' } }
+        ];
+        const sortedData = [
+            { partOfSpeech: 'adjective', definition: { definition: '	Flat and level.' } },
+            { partOfSpeech: 'noun', definition: { definition: '(diminutive) An even number.' } },
+            { partOfSpeech: 'verb', definition: { definition: 'To make flat and level.' } }
+        ];
+        const state = { isLoading: false, error: false, data: data };
+        const action = { type: ACTIONS.DATA_SORT_ITEMS };
+        const expectedState = { isLoading: false, error: false, data: sortedData };
+        const newState = reducer(state, action);
+        expect(newState).toStrictEqual(expectedState);
+    });
     it(`Test Default`, () => {
         const state = { isLoading: false, error: false, data: null };
         const action = { type: '' };

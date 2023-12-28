@@ -6,13 +6,17 @@ import Footer from './Footer';
 import Search from './Search';
 import axios from "axios";
 import ResponsePanel from './ResponsePanel';
+import _ from 'lodash';
+
 const APIURL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 const storageNameOld = "old_word";
 const storageNameNew = "new_word";
 const ACTIONS = {
   START_FETCHING_DATA: 'Is loading',
   DATA_FETCHED: 'Data is fetched successfully',
-  DATA_NOT_FETCHED: 'An error has occured'
+  DATA_NOT_FETCHED: 'An error has occured',
+  DATA_DELETE_ITEM: 'Delete an item from the list',
+  DATA_SORT_ITEMS:'Sort items in alphabetic order'
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -24,6 +28,15 @@ function reducer(state, action) {
     }
     case ACTIONS.DATA_NOT_FETCHED: {
       return { ...state, isLoading: false, error: true, data: null };
+    }
+    case ACTIONS.DATA_DELETE_ITEM: {
+      const value = state.data[action.index].partOfSpeech;
+      const newData = state.data.filter(d => d.partOfSpeech != value);
+      return { ...state, isLoading: false, error: false, data: newData };
+    }
+    case ACTIONS.DATA_SORT_ITEMS: {
+      const newData=_.sortBy(state.data,'partOfSpeech');
+      return { ...state, isLoading: false, error: false, data: newData };
     }
     default:
       return state;
@@ -99,7 +112,7 @@ function App() {
     <>
       <Header />
       <Search word={word} handleSearch={handleWord} doSearch={doSearch} doLastSearch={doLastSearch} />
-      <ResponsePanel isLoading={state.isLoading} error={state.error} data={state.data} />
+      <ResponsePanel isLoading={state.isLoading} error={state.error} data={state.data} dispatch={dispatch} />
       <Footer />
     </>
   )
