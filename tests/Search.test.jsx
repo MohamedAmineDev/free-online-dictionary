@@ -14,7 +14,15 @@ describe('Search component tests',()=>{
         const isLoading=false;
         const doSearch=vi.fn();
         render(<Search word={word} isLoading={isLoading} doSearch={doSearch} />);
-        fireEvent.click(screen.getByRole('button',{title:'Search button'}));
+        fireEvent.click(screen.getByTitle('Search button'));
         expect(doSearch).toHaveBeenCalledTimes(1);
+    });
+    it('Test the last search button',()=>{
+        const word="Hi";
+        const isLoading=false;
+        const doLastSearch=vi.fn();
+        render(<Search word={word} isLoading={isLoading} doLastSearch={doLastSearch} />);
+        fireEvent.click(screen.getByTitle('Last search button'));
+        expect(doLastSearch).toHaveBeenCalledTimes(1);
     });
 });
