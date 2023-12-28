@@ -11,9 +11,9 @@ function Item({ item, index, dispatch }:IItem) {
         <>
             <tr>
                 <th scope="row">{index + 1}</th>
-                <td className="fw-bolder">{item.partOfSpeech}</td>
+                <td className="fw-bolder" data-testid={`type${index+1}`}>{item.partOfSpeech}</td>
                 <td className="fst-italic"> {item.definition.definition}  </td>
-                <td><button type="button" className="btn btn-dark text-light" onClick={(e:any) => {
+                <td><button type="button" className="btn btn-dark text-light" data-testid={`btn${index+1}`} onClick={(e:any) => {
                     e.preventDefault();
                     dispatch({ type: ACTIONS.DATA_DELETE_ITEM, index: index,payload:null });
                 }}>Delete</button></td>
