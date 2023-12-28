@@ -72,7 +72,7 @@ function App() {
     data: null
   };
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const [word, setWord] = React.useState(localStorage.getItem(storageNameNew) || "Hello");
+  const [word, setWord] = React.useState(localStorage.getItem(storageNameNew) || "Morning");
   const [doTheSearch, setDoTheSearch] = React.useState(true);
   React.useEffect(() => {
     fetchData(word);
