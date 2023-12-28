@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, MouseEvent  } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import 'bootstrap/dist/js/bootstrap.min.js';
 import Header from './Header';
@@ -16,9 +16,26 @@ const ACTIONS = {
   DATA_FETCHED: 'Data is fetched successfully',
   DATA_NOT_FETCHED: 'An error has occured',
   DATA_DELETE_ITEM: 'Delete an item from the list',
-  DATA_SORT_ITEMS:'Sort items in alphabetic order'
+  DATA_SORT_ITEMS: 'Sort items in alphabetic order'
 };
-function reducer(state, action) {
+export interface Definition {
+  definition: string
+};
+export  interface Word {
+  partOfSpeech: string,
+  definition: Definition
+};
+export interface Action {
+  type: string;
+  index?: number;
+  payload: Array<Word> | null;
+}
+export interface State {
+  isLoading: boolean;
+  error: boolean;
+  data: Array<Word> | null;
+};
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     case ACTIONS.START_FETCHING_DATA: {
       return { ...state, isLoading: true, error: false, data: null };
@@ -30,12 +47,18 @@ function reducer(state, action) {
       return { ...state, isLoading: false, error: true, data: null };
     }
     case ACTIONS.DATA_DELETE_ITEM: {
-      const value = state.data[action.index].partOfSpeech;
-      const newData = state.data.filter(d => d.partOfSpeech != value);
+      let target: Word = {} as Word;
+      let newData: Array<Word> = [];
+      if (state != undefined) {
+        if (state.data != undefined && action.index != undefined) {
+          target = state.data[action.index];
+          newData = state.data.filter((d: Word) =>  d.definition.definition!= target.definition.definition);
+        }
+      }
       return { ...state, isLoading: false, error: false, data: newData };
     }
     case ACTIONS.DATA_SORT_ITEMS: {
-      const newData=_.sortBy(state.data,'partOfSpeech');
+      const newData: Array<Word> = _.sortBy(state.data, 'partOfSpeech');
       return { ...state, isLoading: false, error: false, data: newData };
     }
     default:
@@ -43,20 +66,25 @@ function reducer(state, action) {
   }
 }
 function App() {
-  const [state, dispatch] = React.useReducer(reducer, { isLoading: false, error: false, data: null });
+  let initialState: State = {
+    isLoading: false,
+    error: false,
+    data: null
+  };
+  const [state, dispatch] = React.useReducer(reducer, initialState);
   const [word, setWord] = React.useState(localStorage.getItem(storageNameNew) || "Hello");
   const [doTheSearch, setDoTheSearch] = React.useState(true);
   React.useEffect(() => {
     fetchData(word);
   }, [doTheSearch]);
-  function handleWord(e) {
+  function handleWord(e: React.ChangeEvent<HTMLInputElement>) {
     setWord(e.target.value);
     e.preventDefault();
   }
-  function formatData(response) {
+  function formatData(response: any) {
     return response.data[0].meanings
-      .filter(d => d.partOfSpeech == 'noun' || d.partOfSpeech == 'verb' || d.partOfSpeech == 'adjective' || d.partOfSpeech == 'interjection')
-      .map(d => {
+      .filter((d: Word) => d.partOfSpeech == 'noun' || d.partOfSpeech == 'verb' || d.partOfSpeech == 'adjective' || d.partOfSpeech == 'interjection')
+      .map((d: any) => {
         if (d.definition) {
           return {
             partOfSpeech: d.partOfSpeech,
@@ -71,13 +99,13 @@ function App() {
         }
       });
   }
-  async function fetchData(wordKey) {
-    dispatch({ type: ACTIONS.START_FETCHING_DATA });
+  async function fetchData(wordKey: string) {
+    dispatch({ type: ACTIONS.START_FETCHING_DATA, index: -1, payload: null });
 
     try {
       const response = await axios.get(`${APIURL}${wordKey}`);
       const data = formatData(response);
-      dispatch({ type: ACTIONS.DATA_FETCHED, payload: data });
+      dispatch({ type: ACTIONS.DATA_FETCHED, payload: data, index: -1 });
       const newWord = localStorage.getItem(storageNameNew);
       if (newWord == null) {
         localStorage.setItem(storageNameNew, word);
@@ -90,14 +118,14 @@ function App() {
         }
       }
     } catch (error) {
-      dispatch({ type: ACTIONS.DATA_NOT_FETCHED });
+      dispatch({ type: ACTIONS.DATA_NOT_FETCHED, index: -1, payload: null });
     }
   }
-  function doSearch(e) {
+  function doSearch(e: MouseEvent<HTMLButtonElement>):void {
     e.preventDefault();
     fetchData(word);
   };
-  function doLastSearch(e) {
+  function doLastSearch(e: MouseEvent<HTMLButtonElement>):void {
     e.preventDefault();
     let lastWord = localStorage.getItem(storageNameOld);
     if (lastWord == null) {
@@ -118,4 +146,5 @@ function App() {
   )
 }
 export { reducer, ACTIONS, App };
+;
 export default App;

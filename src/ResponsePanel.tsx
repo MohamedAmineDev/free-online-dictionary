@@ -1,7 +1,12 @@
-import { ACTIONS } from "./App";
+import { ACTIONS, Action, State, Word } from "./App";
 import List from "./List";
-
-function ResponsePanel({ data, isLoading, error, dispatch }) {
+interface IResponsePanel {
+    data: Array<Word> | null;
+    isLoading: boolean;
+    error: boolean;
+    dispatch: (a: Action) => void;
+};
+function ResponsePanel({ data, isLoading, error, dispatch }: IResponsePanel) {
     return (
         <>
             <div className="row mt-3">
@@ -30,9 +35,9 @@ function ResponsePanel({ data, isLoading, error, dispatch }) {
 
                     </div>
                     <div className="col-4 text-center">
-                        <button type="button" class="btn btn-primary btn-lg btn-block rounded" data-testid="sort-button" title="Sort button" onClick={(e)=>{
+                        <button type="button" className="btn btn-primary btn-lg btn-block rounded" data-testid="sort-button" title="Sort button" onClick={(e) => {
                             e.preventDefault();
-                            dispatch({type:ACTIONS.DATA_SORT_ITEMS});
+                            dispatch({ type: ACTIONS.DATA_SORT_ITEMS, index: -1, payload: null });
                         }}>Sort dictionary</button>
                     </div>
                     <div className="col-4">

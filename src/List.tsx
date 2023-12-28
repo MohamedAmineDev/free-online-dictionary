@@ -1,6 +1,10 @@
+import { Action, State, Word } from "./App";
 import Item from "./Item";
-
-function List({ data,dispatch }) {
+interface IList {
+    data: Array<Word> | null;
+    dispatch: (a: Action) => void;
+};
+function List({ data, dispatch }: IList) {
     return (
         <>
             <table className="table  border-primary table-hover " title="Response">
@@ -11,9 +15,9 @@ function List({ data,dispatch }) {
                         <th scope="col">Definition</th>
                         <th scope="col">Action</th>
                     </tr>
-                    {data.map((d, index) => {
+                    {data ? data.map((d: Word, index: number) => {
                         return <Item item={d} key={index} index={index} dispatch={dispatch} />
-                    })}
+                    }) : <></>}
                 </thead>
                 <tbody>
 
@@ -22,5 +26,5 @@ function List({ data,dispatch }) {
         </>
     );
 }
-export {List};
+export { List };
 export default List;
