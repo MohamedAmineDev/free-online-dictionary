@@ -1,11 +1,20 @@
-function Search({ word, handleSearch, doSearch }) {
+function Search({ word, handleSearch, doSearch,doLastSearch }) {
     return (
         <>
             <div className="row mt-3">
                 <div className="col-4"></div>
                 <div className="col-4">
                     <input type="text" name="word" className="form-control" value={word} placeholder="Word" id="word" onChange={handleSearch} data-testid="search-input" />
-                    <button className="btn btn-success mt-2" type="button" title="Search button" name="Search-button" data-testid="search-button" onClick={doSearch}>Search</button>
+                    
+                    
+                    <div className="row mt-3">
+                        <div className="col-6">
+                        <button className="btn btn-success" type="button" title="Search button" name="search-button" data-testid="search-button" onClick={doSearch}>Search</button>
+                        </div>
+                        <div className="col-6">
+                        <button className="btn btn-danger" type="button" title="Last search button" name="last-search-button" data-testid="last-search-button" onClick={doLastSearch} >Last search</button>
+                        </div>
+                    </div>
                 </div>
                 <div className="col-4"></div>
             </div>
